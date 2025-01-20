@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chatroom</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-image: url(abstract.jpg);">
+    <div>
+    <h1>Welcome to the Cryptic Chatroom</h1><br>
+    <p id="welcome-message"></p>
+    </div>
+    <div id="chatBox">
+    <input type="text" id="message" placeholder="Type a message..." style="width: 80%;">
+    <button id="sendMessage">Send</button>
+        </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const welcomeMessage = document.getElementById("welcome-message");
+    const userName = localStorage.getItem("username");
+
+    if (userName) {
+        welcomeMessage.textContent = `Welcome, ${userName}!`;
+    } else {
+        welcomeMessage.textContent = "Welcome, Guest!";
+    }
+});
+// Establish WebSocket connection
+const socket = new WebSocket('ws://localhost:3000');
+
+// Select DOM elements
+const chatBox = document.getElementById('chatBox');
+const messageInput = document.getElementById('message');
+const sendMessageButton = document.getElementById('sendMessage');
+const welcomeMessage = document.getElementById('welcome-message');
+
+// Retrieve the username from localStorage (if available)
+const userName = localStorage.getItem('username') || "Guest";
+welcomeMessage.textContent = `Welcome, ${userName}!`;
+
+// Add a new message to the chatbox
+function addMessage(content, sender = 'Anonymous') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message';
+    messageDiv.textContent = `${sender}: ${content}`;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
+}
+
+// Handle WebSocket events
+socket.addEventListener('open', () => {
+    console.log('Connected to WebSocket server.');
+    socket.send(`${userName} has joined the chat.`);
+});
+
+socket.addEventListener('message', (event) => {
+    const data = event.data;
+    addMessage(data); // Display incoming messages in the chatbox
+});
+
+socket.addEventListener('close', () => {
+    console.log('Disconnected from WebSocket server.');
+});
+
+// Send a message when the "Send" button is clicked
+sendMessageButton.addEventListener('click', () => {
+    const message = messageInput.value.trim();
+    if (message !== "") {
+        socket.send(`${userName}: ${message}`);
+        addMessage(message, userName); // Display your own message in the chatbox
+        messageInput.value = ""; // Clear the input field
+    }
+});
+
+// Optional: Send a message when the Enter key is pressed
+messageInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        sendMessageButton.click(); // Simulate clicking the "Send" button
+    }
+});
+socket.onmessage = function(event) {
+    const chatBox = document.getElementById("chatBox");
+    const message = event.data; // `event.data` contains the message as a string
+
+    // Add the message to the chat display
+    const messageElement = document.createElement("p");
+    messageElement.textContent = message;
+    chatBox.appendChild(messageElement);
+};
+
+
+ </script>
+</body>
+</html>

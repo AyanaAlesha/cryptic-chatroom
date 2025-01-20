@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+        
+            <title> Cryptic Chat Login</title>
+            <meta charset="utf-8">
+            <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="styles.css">
+    </head>
+            
+        <body style="background-image: url(abstract.jpg);">
+            <div class="container">
+             <div id="header" style="color:rgb(238, 237, 237); border: 3px purple solid;">
+                <h1  style="font-weight: bolder; padding-top:15px"> Cryptic Chatroom </h1>
+                <h5> User login </h5>
+
+            </div>
+            <div id="user">
+                <form autocomplete="off">
+                <label for="username" > Username: </label><br>
+                <input id="username" type="text" required autocomplete="off"/> <br>
+                <p style="color: red;" id="userNameReq"></p>
+                <label for="passwd"> Password: </label> <br>
+                <input id="passwd" type="password" required autocomplete="off"/><br>
+                </form>               
+                 <button id="login" onclick="loginBtn()"> Enter the chatroom </button>
+
+            </div>
+            </div>
+
+  <script src="script.js">
+   
+    
+  </script>
+            
+
+
+           
+               <footer> &copy AikenDev 2024</footer>
+             
+        </body>
+       
+    
+</html>
